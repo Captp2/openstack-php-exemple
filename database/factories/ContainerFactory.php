@@ -13,6 +13,7 @@ class ContainerFactory extends Factory
     public function definition(): array
     {
         return [
+            'name' => fake()->name,
             'uuid' => Uuid::uuid4(),
             'user_id' => null,
         ];
