@@ -11,7 +11,7 @@ class ListContainerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testICanListContainers()
+    public function testICanListContainers(): void
     {
         User::factory()->count(2)->create();
         $containers = Container::factory(['user_id' => 2])->count(5)->create();
@@ -32,6 +32,9 @@ class ListContainerTest extends TestCase
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'email_verified_at' => $user->email_verified_at->format("Y-m-d\TH:i:s.u\Z"),
+                'created_at' => $user->created_at->format("Y-m-d\TH:i:s.u\Z"),
+                'updated_at' => $user->updated_at->format("Y-m-d\TH:i:s.u\Z"),
             ]
         ], $lastContainer);
     }

@@ -15,7 +15,8 @@ class ContainerController extends Controller
     #[ArrayShape(['containers' => "mixed"])] public function index(ListContainerRequest $request): array
     {
         return [
-            'containers' => Container::where(['user_id' => $request->get('user_id')])->get()
+            'containers' => Container::where(['user_id' => $request->get('user_id')])
+                ->with('owner')->get()
         ];
     }
 }
