@@ -11,8 +11,6 @@ class ListContainerTest extends TestCase
 {
     use RefreshDatabase;
 
-    const CONTAINER_NAME = 'test-container';
-
     public function testICanListContainers()
     {
         User::factory()->count(2)->create();
