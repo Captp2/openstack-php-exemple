@@ -5,10 +5,13 @@ namespace Tests\Feature\Containers;
 use App\Models\Container;
 use App\Models\User;
 use Faker\Factory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CreateContainerTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function testICanCreateAContainer()
     {
         $user = User::factory()->create();
@@ -24,7 +27,7 @@ class CreateContainerTest extends TestCase
         $this->assertEquals([
             'name' => $container->name,
             'uuid' => (string)$container->uuid,
-            'user_id' => 2,
+            'user_id' => $user->id,
             'created_at' => $container->created_at->format("Y-m-d\TH:i:s.u\Z"),
             'updated_at' => $container->updated_at->format("Y-m-d\TH:i:s.u\Z"),
             'owner' => [

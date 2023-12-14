@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/containers', [ContainerController::class, 'index']);
+Route::post('/containers', [ContainerController::class, 'create']);
