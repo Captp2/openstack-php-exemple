@@ -41,7 +41,10 @@ class CreateContainerTest extends TestCase
         ], $fetchedContainer);
     }
 
-    public function testICantCreateAContainerThatAlreadyExists()
+    /**
+     * @return void
+     */
+    public function testICantCreateAContainerThatAlreadyExists(): void
     {
         $user = User::factory()->create();
         $containerName = Factory::create()->text('52');
