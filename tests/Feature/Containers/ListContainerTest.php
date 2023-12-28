@@ -14,9 +14,9 @@ class ListContainerTest extends TestCase
     public function testICanListContainers(): void
     {
         User::factory()->count(2)->create();
-        $containers = Container::factory(['user_id' => 2])->count(5)->create();
+        $user = User::query()->first();
+        $containers = Container::factory(['user_id' => $user->id])->count(5)->create();
         $container = $containers->last();
-        $user = User::find(2);
 
         $fetchedContainers = $this->get('/api/containers?user_id=' . $user->id)->json('containers');
 
@@ -25,7 +25,7 @@ class ListContainerTest extends TestCase
         $this->assertEquals([
             'name' => $container->name,
             'uuid' => (string) $container->uuid,
-            'user_id' => 2,
+            'user_id' => $user->id,
             'created_at' => $container->created_at->format("Y-m-d\TH:i:s.u\Z"),
             'updated_at' => $container->updated_at->format("Y-m-d\TH:i:s.u\Z"),
             'owner' => [

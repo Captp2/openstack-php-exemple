@@ -40,4 +40,28 @@ class CreateContainerTest extends TestCase
             ]
         ], $fetchedContainer);
     }
+
+    /**
+     * @return void
+     */
+    public function testICantCreateAContainerThatAlreadyExists(): void
+    {
+        $user = User::factory()->create();
+        $containerName = Factory::create()->text('52');
+
+        $this->post('/api/containers', [
+            'name' => $containerName,
+            'user_id' => $user->id
+        ])->assertStatus(201);
+
+        $this->post('/api/containers', [
+            'name' => $containerName,
+            'user_id' => $user->id
+        ])->assertStatus(422)
+        ->assertJson([
+            'errors' => [
+                'name' => "Container {$containerName} already exists"
+            ]
+        ]);
+    }
 }
