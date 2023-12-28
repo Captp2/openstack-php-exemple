@@ -4,6 +4,7 @@ namespace Tests\Feature\Containers;
 
 use App\Models\Container;
 use App\Models\User;
+use Faker\Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\AbstractTester;
 
@@ -19,7 +20,7 @@ class DeleteContainerTest extends AbstractTester
         $user = User::factory()->create();
         $container = Container::factory(['user_id' => $user->id])->create();
 
-        $this->delete("/api/containers/{$container->id}")
+        $this->delete("/api/containers/{$container->uuid}")
             ->assertStatus(204);
     }
 
@@ -28,7 +29,7 @@ class DeleteContainerTest extends AbstractTester
      */
     public function testICantDeleteAnUnknownContainer(): void
     {
-        $this->delete("/api/containers/1")
+        $this->delete("/api/containers/" . self::$faker->uuid())
             ->assertStatus(404);
     }
 }

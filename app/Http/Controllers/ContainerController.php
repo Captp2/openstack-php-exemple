@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateContainerRequest;
+use App\Http\Requests\DeleteContainerRequest;
 use App\Http\Requests\ListContainerRequest;
 use App\Models\Container;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 use JetBrains\PhpStorm\ArrayShape;
 use OvhSwift\Domains\ContainerManager;
 use OvhSwift\Interfaces\SPI\IUseContainers;
@@ -59,6 +61,32 @@ class ContainerController extends Controller implements IUseContainers
         ]))->save();
 
         return response()->noContent(Response::HTTP_CREATED);
+    }
+
+    /**
+     * @param $uuid
+     * @param DeleteContainerRequest $request
+     * @return \Illuminate\Http\JsonResponse|Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \OvhSwift\Exceptions\InvalidConfigException
+     * @throws \OvhSwift\Exceptions\OpenStackException
+     * @throws \OvhSwift\Exceptions\ResourceNotFoundException
+     */
+    public function delete($uuid, DeleteContainerRequest $request)
+    {
+        Validator::make(['uuid' => $uuid], [
+            'uuid' => 'required|uuid',
+        ])->validate();
+        $container = Container::query()->where(['uuid' => $uuid])->first();
+        if (!$container) {
+            return response()->json(['errors' => [
+                'uuid' => "Container {$uuid} not found"
+            ]], 404);
+        }
+        (new ContainerManager($this))->deleteContainer($container->name, $request->get('force', false));
+
+        return response()->noContent();
     }
 
     /**
