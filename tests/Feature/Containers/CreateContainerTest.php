@@ -64,4 +64,20 @@ class CreateContainerTest extends TestCase
             ]
         ]);
     }
+
+    /**
+     * @return void
+     */
+    public function testICantCreateAContainerWithNonExistingUser(): void
+    {
+        $this->post('/api/containers', [
+            'name' => Factory::create()->text('52'),
+            'user_id' => 1
+        ])->assertStatus(422)
+        ->assertJson([
+            'errors' => [
+                'user' => "User 1 not found"
+            ]
+        ]);
+    }
 }
