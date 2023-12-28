@@ -5,9 +5,9 @@ namespace Tests\Feature\Containers;
 use App\Models\Container;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Feature\AbstractTester;
 
-class ListContainerTest extends TestCase
+class ListContainerTest extends AbstractTester
 {
     use RefreshDatabase;
 
@@ -22,9 +22,10 @@ class ListContainerTest extends TestCase
 
         $this->assertIsArray($fetchedContainers);
         $lastContainer = $fetchedContainers[count($fetchedContainers) - 1];
+
         $this->assertEquals([
             'name' => $container->name,
-            'uuid' => (string) $container->uuid,
+            'uuid' => (string)$container->uuid,
             'user_id' => $user->id,
             'created_at' => $container->created_at->format("Y-m-d\TH:i:s.u\Z"),
             'updated_at' => $container->updated_at->format("Y-m-d\TH:i:s.u\Z"),
