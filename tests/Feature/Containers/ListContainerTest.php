@@ -5,11 +5,9 @@ namespace Tests\Feature\Containers;
 use App\Models\Container;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use OvhSwift\Domains\ContainerManager;
-use OvhSwift\Interfaces\SPI\IUseContainers;
 use Tests\Feature\AbstractTester;
 
-class ListContainerTest extends AbstractTester implements IUseContainers
+class ListContainerTest extends AbstractTester
 {
     use RefreshDatabase;
 
@@ -40,14 +38,5 @@ class ListContainerTest extends AbstractTester implements IUseContainers
                 'updated_at' => $user->updated_at->format("Y-m-d\TH:i:s.u\Z"),
             ]
         ], $lastContainer);
-    }
-
-    /**
-     * @param string $containerName
-     * @return bool
-     */
-    public function validateContainerName(string $containerName): bool
-    {
-        return true;
     }
 }
