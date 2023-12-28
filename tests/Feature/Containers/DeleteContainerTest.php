@@ -29,7 +29,13 @@ class DeleteContainerTest extends AbstractTester
      */
     public function testICantDeleteAnUnknownContainer(): void
     {
-        $this->delete("/api/containers/" . self::$faker->uuid())
-            ->assertStatus(404);
+        $uuid = self::$faker->uuid();
+        $this->delete("/api/containers/" . $uuid)
+            ->assertStatus(404)
+            ->assertJson([
+                'errors' => [
+                    'uuid' => "Container {$uuid} not found"
+                ]
+            ]);
     }
 }
