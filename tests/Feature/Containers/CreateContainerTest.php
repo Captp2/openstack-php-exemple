@@ -6,9 +6,9 @@ use App\Models\Container;
 use App\Models\User;
 use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Tests\Feature\AbstractTester;
 
-class CreateContainerTest extends TestCase
+class CreateContainerTest extends AbstractTester
 {
     use RefreshDatabase;
 

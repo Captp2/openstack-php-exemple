@@ -5,9 +5,11 @@ namespace Tests\Feature\Containers;
 use App\Models\Container;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use OvhSwift\Domains\ContainerManager;
+use OvhSwift\Interfaces\SPI\IUseContainers;
+use Tests\Feature\AbstractTester;
 
-class ListContainerTest extends TestCase
+class ListContainerTest extends AbstractTester implements IUseContainers
 {
     use RefreshDatabase;
 
@@ -21,10 +23,18 @@ class ListContainerTest extends TestCase
         $fetchedContainers = $this->get('/api/containers?user_id=' . $user->id)->json('containers');
 
         $this->assertIsArray($fetchedContainers);
-        $lastContainer = $fetchedContainers[count($fetchedContainers) - 1];
+        $lastFetchedContainer = $fetchedContainers[count($fetchedContainers) - 1];
+        $swiftContainers = (new ContainerManager($this))->listContainers();
+        $swiftContainer = null;
+        foreach ($swiftContainers as $tmpContainer) {
+            if ($tmpContainer->name === $lastFetchedContainer['name']) {
+                $swiftContainer = $tmpContainer;
+            }
+        }
+
         $this->assertEquals([
             'name' => $container->name,
-            'uuid' => (string) $container->uuid,
+            'uuid' => (string)$container->uuid,
             'user_id' => $user->id,
             'created_at' => $container->created_at->format("Y-m-d\TH:i:s.u\Z"),
             'updated_at' => $container->updated_at->format("Y-m-d\TH:i:s.u\Z"),
@@ -36,6 +46,15 @@ class ListContainerTest extends TestCase
                 'created_at' => $user->created_at->format("Y-m-d\TH:i:s.u\Z"),
                 'updated_at' => $user->updated_at->format("Y-m-d\TH:i:s.u\Z"),
             ]
-        ], $lastContainer);
+        ], $lastFetchedContainer);
+    }
+
+    /**
+     * @param string $containerName
+     * @return bool
+     */
+    public function validateContainerName(string $containerName): bool
+    {
+        return true;
     }
 }
