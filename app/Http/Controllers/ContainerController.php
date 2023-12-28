@@ -31,9 +31,17 @@ class ContainerController extends Controller implements IUseContainers
      */
     public function create(CreateContainerRequest $request)
     {
-        User::findOrFail($request->get('user_id'));
+        $user = User::find($request->get('user_id'));
 
-        if(Container::query()->where(['name' => $request->get('name')])->exists()) {
+        if (!$user) {
+            return response()->json([
+                'errors' => [
+                    'user' => "User {$request->get('user_id')} not found"
+                ]
+            ], 422);
+        }
+
+        if (Container::query()->where(['name' => $request->get('name')])->exists()) {
             return response()->json([
                 'errors' => [
                     'name' => "Container {$request->get('name')} already exists"
