@@ -23,14 +23,7 @@ class ListContainerTest extends AbstractTester implements IUseContainers
         $fetchedContainers = $this->get('/api/containers?user_id=' . $user->id)->json('containers');
 
         $this->assertIsArray($fetchedContainers);
-        $lastFetchedContainer = $fetchedContainers[count($fetchedContainers) - 1];
-        $swiftContainers = (new ContainerManager($this))->listContainers();
-        $swiftContainer = null;
-        foreach ($swiftContainers as $tmpContainer) {
-            if ($tmpContainer->name === $lastFetchedContainer['name']) {
-                $swiftContainer = $tmpContainer;
-            }
-        }
+        $lastContainer = $fetchedContainers[count($fetchedContainers) - 1];
 
         $this->assertEquals([
             'name' => $container->name,
@@ -46,7 +39,7 @@ class ListContainerTest extends AbstractTester implements IUseContainers
                 'created_at' => $user->created_at->format("Y-m-d\TH:i:s.u\Z"),
                 'updated_at' => $user->updated_at->format("Y-m-d\TH:i:s.u\Z"),
             ]
-        ], $lastFetchedContainer);
+        ], $lastContainer);
     }
 
     /**
